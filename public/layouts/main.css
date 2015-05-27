@@ -1,0 +1,20 @@
+.centered {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+div.centered {
+    content: url( /img/watcher.png );
+}
+
+/* Searchbox Formatting */
+
+.searchbox {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
