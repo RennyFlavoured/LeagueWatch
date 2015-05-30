@@ -9,32 +9,29 @@ class HomeController extends Zend_Controller_Action
 
     public function indexAction()
     {
-
-         $id = $this->getRequest()->getParam('name');
-	 $this->view->id= $id;
-        file_put_contents('/tmp/file.txt', $id);
-
         $name = $this->_getParam('name');
-        $apiKey = Zend_Registry::get('config')->api_key;
 
-        $curl = curl_init();
-        // Set some options - we are passing in a useragent too here
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER  => 1,
-            CURLOPT_URL             => sprintf('https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/%s?api_key=%s', $name, $apiKey),
-            CURLOPT_USERAGENT       => 'LeagueWatch API'
-        ));
-        // Send the request & save response to $resp
-        $resp = curl_exec($curl);
-        // Close request to clear up some resources
-        curl_close($curl);
+        $resp = $this->populateAction($name);
 
         $this->view->resp = $resp;
 
     }
 
-    public function populateAction()
+    public function populateAction($name)
     {
-        $request = $this->getRequest();
+        $apiKey = Model_Config::getGlobals('api_key');
+
+        $curl = new API_Curl();
+        
+        $curl->sendRequest('summoner/by-name', $name, $apiKey);
+        Model_Log::trace($summoner_id);
+        $curl->sendRequest('summoner', $summoner_id, $apiKey);
+
+        $summoner_db = new Model_Summoner();
+        $summoner_db->createSummoner($data);
+
+
+
+        return $resp;
     }
 }
