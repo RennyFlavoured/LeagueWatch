@@ -9,8 +9,9 @@ class HomeController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $request = $this->getRequest();
-        file_put_contents('/tmp/file.txt', 'bob');
+         $id = $this->getRequest()->getParam('name');
+ $this->view->id= $id;
+        file_put_contents('/tmp/file.txt', $id);
     }
 
     public function populateAction()
