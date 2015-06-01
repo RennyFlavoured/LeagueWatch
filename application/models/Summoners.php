@@ -2,6 +2,7 @@
 class Model_Summoners extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'summoners';
+	protected $_adapter = 'leaguewatch';
 	protected $_primary = 'summoner_id';
 
 	public function getSummoner($ID)
@@ -19,12 +20,12 @@ class Model_Summoners extends Zend_Db_Table_Abstract
 		return null;
 	}
 
-	public function createSummoner($data)
+	public function getSummonerByName($name)
 	{
-		if (empty($Email)) {throw new Exception('Empty Email');}
+		if (empty($name)) {throw new Exception('Empty name');}
 		$select = $this->select();
 
-		$select->where('Email = ?', $Email);
+		$select->where('name = ?', $name);
 
 		// Get actual data
 		$stmt = $select->query();
@@ -32,6 +33,13 @@ class Model_Summoners extends Zend_Db_Table_Abstract
 		if (count($results) == 1) return $results[0];
 
 		return null;
+	}
+
+	public function createSummoner($data)
+	{
+		// Get actual data
+		$result = $this->insert($data);
+		return $result;
 	}
 
 	public function searchAdmins($Filter = null, $Return = 'data')

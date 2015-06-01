@@ -11,9 +11,16 @@ class HomeController extends Zend_Controller_Action
     {
         $name = $this->_getParam('name');
 
-        $resp = $this->populateAction($name);
+        $summoner_db = new Model_Summoners();
+        $data = $summoner_db->getSummonerByName($name);
 
-        $this->view->resp = $resp;
+        if (empty($data)) {
+            $data = $this->populateAction($name);
+        };
+
+        setcookie('summoner', $data['id'], time()+7200);
+
+        $this->view->resp = $data;
 
     }
 
@@ -21,17 +28,29 @@ class HomeController extends Zend_Controller_Action
     {
         $apiKey = Model_Config::getGlobals('api_key');
 
-        $curl = new API_Curl();
-        
-        $curl->sendRequest('summoner/by-name', $name, $apiKey);
-        Model_Log::trace($summoner_id);
-        $curl->sendRequest('summoner', $summoner_id, $apiKey);
+        $curl = new API_Curl();        
+        $summoner_id = $curl->sendRequest('summoner/by-name', $name, $apiKey);
+        //$summoner_data = $curl->sendRequest('summoner', $summoner_id, $apiKey);
 
-        $summoner_db = new Model_Summoner();
-        $summoner_db->createSummoner($data);
+        $summoner_id = json_decode($summoner_id, true);
 
+        foreach ($summoner_id as $summoner_data){
+            
+            $data = array(
+                'summoner_id'   => $summoner_data['id'],
+                'date_created'  => time(),
+                'name'          => $summoner_data['name'],
+                'level'         => $summoner_data['summonerLevel'],
+                'avatar'        => $summoner_data['profileIconId'],
+            );
+            Model_Log::trace($data);
 
+            $summoner_db = new Model_Summoners();
+            $summoner_db->createSummoner($data);
+            break;
+        }
 
-        return $resp;
+        return $data;
+
     }
 }

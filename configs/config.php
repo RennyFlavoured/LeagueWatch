@@ -4,16 +4,35 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-$db = array (
-    'adapter'   => 'mysqli',
-    'params'    =>
-    array (
+// $db = array (
+//     'adapter'   => 'mysqli',
+//     'params'    =>
+//     array (
+//         'host'      => '127.0.0.1',
+//         'dbname'    => 'leaguewatch',
+//         'username'  => 'root',
+//         'password'  => '',
+//         'charset'   => 'utf8',
+//     ),
+// );
+
+$leaguewatch_db = array(
+    'leaguewatch' => array (
+        'adapter'   => 'mysqli',
         'host'      => '127.0.0.1',
         'dbname'    => 'leaguewatch',
         'username'  => 'root',
         'password'  => '',
-        'charset'   => 'utf8',
+        'charset'   => 'utf8'
     ),
+    'lw_static' => array (
+        'adapter'   => 'mysqli',
+        'host'      => '127.0.0.1',
+        'dbname'    => 'lw_static',
+        'username'  => 'root',
+        'password'  => '',
+        'charset'   => 'utf8'
+    )
 );
 
 $globals = array(
@@ -49,7 +68,7 @@ return array (
                 'Zend_View_Helper' => APPLICATION_PATH . '/views/helpers',
             ),
         ),
-        'db'        => $db,
+        'multidb'        => $leaguewatch_db,
     ),
     'serviceDomain'     => $serviceDomain,
     'globals'           => $globals,
