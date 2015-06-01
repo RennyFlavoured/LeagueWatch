@@ -18,7 +18,7 @@ class HomeController extends Zend_Controller_Action
             $data = $this->populateAction($name);
         };
 
-        setcookie('summoner', $data['id'], time()+7200);
+        setcookie('summoner', $data['summoner_id'], time()+7200);
 
         $this->view->resp = $data;
 

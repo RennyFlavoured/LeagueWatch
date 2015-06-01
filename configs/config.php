@@ -4,18 +4,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-// $db = array (
-//     'adapter'   => 'mysqli',
-//     'params'    =>
-//     array (
-//         'host'      => '127.0.0.1',
-//         'dbname'    => 'leaguewatch',
-//         'username'  => 'root',
-//         'password'  => '',
-//         'charset'   => 'utf8',
-//     ),
-// );
-
 $leaguewatch_db = array(
     'leaguewatch' => array (
         'adapter'   => 'mysqli',
