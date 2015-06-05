@@ -8,18 +8,18 @@
     <body ng-app="myApp">
         <section ng-controller="TabController as tab" id="content-container">
             <div ng-init="summoners = [
-                {summonerName:'Tactick', championName:'Ahri', team:'blue'},
-                {summonerName:'Helgrimm', championName:'Vayne', team:'blue'},
-                {summonerName:'Aklith', championName:'Pantheon', team:'blue'},
-                {summonerName:'Ketesha', championName:'Leona', team:'purple'},
-                {summonerName:'Nerdy4tw', championName:'Thresh', team:'purple'},
-                {summonerName:'ShadowedSun', championName:'Morgana', team:'purple'}
+                {summonerName:'Tactick', championName:'Ahri', team:'blue', index:1},
+                {summonerName:'Helgrimm', championName:'Vayne', team:'blue', index:2},
+                {summonerName:'Aklith', championName:'Pantheon', team:'blue', index:3},
+                {summonerName:'Ketesha', championName:'Leona', team:'purple', index:4},
+                {summonerName:'Nerdy4tw', championName:'Thresh', team:'purple', index:5},
+                {summonerName:'ShadowedSun', championName:'Morgana', team:'purple', index:6}
             ]">
                 <div id="redTeam" class="team">
                     <ul>
                         <li id="userList" ng-class="{ active:tab.isSet($index + 1) }" ng-repeat="summoner in summoners | filter:{team: 'blue'}">
                             <div class="redSummoner summoner">
-                                <a href="" ng-click="tab.setTab($index + 1)">{{summoner.summonerName}}</a>
+                                <a href="" ng-click="tab.setTab(summoner.index)">{{summoner.summonerName}}</a>
                             </div>
                         </li>
                     </ul>
@@ -33,14 +33,13 @@
                                 <p><b>Champion:</b> {{summoner.championName}}</p>
                             </div>
                         </div>
-                        content, I'm fully aware the filtering's broken you vagina's
                     </div>
                 </div>
                 <div id="purpleTeam" class="team">
                     <ul>
                         <li id="userList" ng-class="{ active:tab.isSet($index + 1) }" ng-repeat="summoner in summoners | filter:{team: 'purple'}">
                             <div class="purpleSummoner summoner">
-                                <a href="" ng-click="tab.setTab($index + 1)">{{summoner.summonerName}}</a>
+                                <a href="" ng-click="tab.setTab(summoner.index)">{{summoner.summonerName}}</a>
                             </div>
                         </li>
                     </ul>
