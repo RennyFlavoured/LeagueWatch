@@ -21,7 +21,7 @@ class API_Curl
     }
 
     public  function sendDDRequest($url, $data, $param)
-	{
+    {
 
         $apiKey = Model_Config::getGlobals('api_key');
 
@@ -37,6 +37,6 @@ class API_Curl
         // Close request to clear up some resources
         curl_close($curl);
 
-		return $resp;
-	}
+        return $resp;
+    }
 }

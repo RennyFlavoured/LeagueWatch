@@ -27,11 +27,6 @@ $globals = array(
     'api_key' =>  '36c37189-8a94-4cbf-977f-f443cb691f6f',
 );
 
-$serviceDomain = array(
-    'schema'    => 'https',
-    'name'      => 'master.moconnect.dev',
-);
-
 return array (
     'bootstrap'     => array(
         'path'      => APPLICATION_PATH . '/Bootstrap.php',
@@ -46,7 +41,7 @@ return array (
             'controllerDirectory'   => APPLICATION_PATH . '/controllers',
             'moduleDirectory'       => APPLICATION_PATH . '/modules',
             'params'                => array(
-                //'displayExceptions' => 1,
+                'displayExceptions' => 1,
             ),
         ),
         'modules'   => array(),
@@ -56,15 +51,7 @@ return array (
                 'Zend_View_Helper' => APPLICATION_PATH . '/views/helpers',
             ),
         ),
-        'multidb'        => $leaguewatch_db,
+        'multidb'   => $leaguewatch_db,
     ),
-    'serviceDomain'     => $serviceDomain,
-    'globals'           => $globals,
-    'mofun'             => array (
-        'baseURL'   => 'http://mofun.tag-games.com/',
-        'skins'     => '/var/www/moconnect/mofun/media',
-        'skinsURL'  => 'http://mofun.tag-games.com/media',
-        'items'     => '/var/www/moconnect/mofun/media',
-        'itemsURL'  => 'http://mofun.tag-games.com/media',
-    ),
+    'globals'       => $globals,
 );

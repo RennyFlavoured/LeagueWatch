@@ -41,9 +41,8 @@ class HomeController extends Zend_Controller_Action
                 'date_created'  => time(),
                 'name'          => $summoner_data['name'],
                 'level'         => $summoner_data['summonerLevel'],
-                'avatar'        => $summoner_data['profileIconId'],
+                'avatar'        => sprintf('http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/%s.png', $summoner_data['profileIconId']),
             );
-            Model_Log::trace($data);
 
             $summoner_db = new Model_Summoners();
             $summoner_db->createSummoner($data);
