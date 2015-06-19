@@ -1,6 +1,6 @@
 <?php
 
-class HomeController extends Zend_Controller_Action
+class SummonerController extends Zend_Controller_Action
 {
 
     public function init()
@@ -12,15 +12,15 @@ class HomeController extends Zend_Controller_Action
         $name = $this->_getParam('name');
 
         $summoner_db = new Model_Summoners();
-        $data = $summoner_db->getSummonerByName($name);
+        $summoner = $summoner_db->getSummonerByName($name);
 
-        if (empty($data)) {
-            $data = $this->populateAction($name);
+        if (empty($summoner)) {
+            $summoner = $this->populateAction($name);
         };
 
-        setcookie('summoner', $data['summoner_id'], time()+7200);
+        setcookie('summoner', $summoner['summoner_id'], time()+7200);
 
-        $this->view->resp = $data;
+        $this->_helper->json($summoner, true);
 
     }
 
@@ -28,14 +28,14 @@ class HomeController extends Zend_Controller_Action
     {
         $apiKey = Model_Config::getGlobals('api_key');
 
-        $curl = new API_Curl();        
+        $curl = new API_Curl();
         $summoner_id = $curl->sendRequest('summoner/by-name', $name, $apiKey);
         //$summoner_data = $curl->sendRequest('summoner', $summoner_id, $apiKey);
 
         $summoner_id = json_decode($summoner_id, true);
 
         foreach ($summoner_id as $summoner_data){
-            
+
             $data = array(
                 'summoner_id'   => $summoner_data['id'],
                 'date_created'  => time(),
