@@ -9,10 +9,10 @@
 --
 
 CREATE TABLE IF NOT EXISTS `runes` (
-  `entry_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `date_updated` int(20) DEFAULT NULL,
-  `current` varchar(255) DEFAULT NULL,
-  `id` text,
-  `avatar` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`entry_id`)
-) ENGINE=myisam  DEFAULT CHARSET=latin1 ;
+  `rune_entry_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `rune_id` int(10) DEFAULT NULL,
+  `slot` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `attributes` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`rune_entry_id`)
+) ENGINE=myisam  DEFAULT CHARSET=latin1;

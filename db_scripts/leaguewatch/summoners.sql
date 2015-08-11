@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS `summoners` (
   `date_created` int(20) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `level` text,
-  `avatar` varchar(255) DEFAULT NULL,
+  `avatar` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`summoner_id`)
 ) ENGINE=myisam  DEFAULT CHARSET=latin1 ;

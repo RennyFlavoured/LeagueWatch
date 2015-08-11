@@ -54,4 +54,12 @@ class Model_Config
 
         return $globals[$type];
     }
+
+    public static function getDb()
+    {
+        $config = self::getConfig();
+        $db = $config['db'];
+
+        return $db;
+    }
 }
