@@ -1,0 +1,16 @@
+#summonerDetails {
+    background-image: url('../img/championImage.png');
+    width: 400px;
+    height: 160px;
+}
+
+#summonerDetails:hover {
+    cursor: pointer;
+}
+
+#summonerDetailsHover:hover {
+    position: absolute;
+    width: 400px;
+    height: 160px;
+    background-image: url('../img/championHighlight.png');
+}
