@@ -1,9 +1,8 @@
 <?php
-class Model_Summoners extends Zend_Db_Table_Abstract
+class Model_Summoners extends Model_Abstract_Abstract
 {
 	protected $_name = 'summoners';
-	protected $_adapter = 'leaguewatch';
-	protected $_primary = 'summoner_id';
+	protected $_schema = 'leaguewatch';
 
 	public function getSummoner($ID)
 	{

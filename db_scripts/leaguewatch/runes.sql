@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS `runes` (
   `current` varchar(255) DEFAULT NULL,
   `id` text,
   `avatar` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`RowID`)
+  PRIMARY KEY (`entry_id`)
 ) ENGINE=myisam  DEFAULT CHARSET=latin1 ;

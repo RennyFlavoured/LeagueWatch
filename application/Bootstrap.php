@@ -14,14 +14,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         date_default_timezone_set('UTC');
     }
 
-    public function _initDbRegistry()
-    {
-        $this->bootstrap('multidb');
-        $multidb = $this->getPluginResource('multidb');
-        Zend_Registry::set('leaguewatch', $multidb->getDb('leaguewatch'));
-        Zend_Registry::set('lw_static', $multidb->getDb('lw_static'));
-    }
-
     protected function _initAutoload()
     {
         // Establish internal resources and push autoloader to top of stack (new Autoloader = first)

@@ -1,6 +1,6 @@
 <?php
 
-class API_Curl 
+class API_Curl
 {
     public  function sendRequest($url, $data, $apiKey)
     {
@@ -21,7 +21,7 @@ class API_Curl
     }
 
     public  function sendDDRequest($url, $data, $param)
-	{
+    {
 
         $apiKey = Model_Config::getGlobals('api_key');
 
@@ -37,6 +37,24 @@ class API_Curl
         // Close request to clear up some resources
         curl_close($curl);
 
-		return $resp;
-	}
+        return $resp;
+    }
+
+    public  function sendCustom($url, $apiKey)
+    {
+
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER  => 1,
+            CURLOPT_URL             => sprintf('https://euw.api.pvp.net/%s?api_key=%s', $url, $apiKey),
+            CURLOPT_USERAGENT       => 'LeagueWatch API'
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return $resp;
+    }
 }
