@@ -1,47 +1,15 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
         <script src="scripts/controllers/controllers.js"></script>
         <script src="scripts/services/services.js"></script>
         <script src="scripts/directives/directives.js"></script>
         <link rel="stylesheet" href="styles/style.css">
+        <base href="/">
     </head>
     <body ng-app="myApp">
-        <div>
-            <form ng-submit="submitSummonerName()" ng-controller="startUpController">
-                <input ng-model="search">
-                <select ng-model="server">
-                    <option value="br">Brazil</option>
-                    <option value="eune">Europe Nordic &amp; East</option>
-                    <option value="euw">Europe West</option>
-                    <option value="kr">South Korea</option>
-                    <option value="lan">Latin America North</option>
-                    <option value="las">Latin America South</option>
-                    <option value="na">North America</option>
-                    <option value="oce">Oceania</option>
-                    <option value="ru">Russia</option>
-                    <option value="tr">Turkey</option>
-                </select>
-                <button>Search</button>
-                <div ng-show="loadingMessage">
-                    <P>Loading....</p>
-                </div>
-                <div><p>{{ errorCode }}</p></div>
-                <p>{{ summoner.id }}</p>
-                <p>{{ summoner.name }}</p>
-                <p>{{ summoner.profileIconId }}</p>
-                <p>{{ summoner.summonerLevel }}</p>
-                <p>{{ summoner.revisionDate }}</p>
-            </form>
-            <form ng-submit="getFeaturedGame()" ng-controller="featuredGame">
-                <button>Game</button>
-            </form>
-            <div ng-controller="champRepeat">
-                <div ng-repeat="player in players">
-                    <lw-summoner-details data-name="player.summonerName" data-champion-name="player.championName"></lw-summoner-details>
-                </div>
-            </div>
-        </div>
+        <div ng-view></div>
     </body>
 </html>

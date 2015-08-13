@@ -4,9 +4,10 @@ directives.directive('lwSummonerDetails', function(){
     return {
         restrict: 'E',
         scope: {
-            name: '=',
-            champ: '=championName'
+            summoner: '=',
+            summonerGame: '=',
+            server: '='
         },
-        templateUrl: 'scripts/partials/summonerDetails.html'
+        templateUrl: 'scripts/partials/summonerOverview.html'
     };
 });

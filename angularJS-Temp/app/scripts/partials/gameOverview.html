@@ -1,0 +1,6 @@
+<div ng-repeat="summoner in summoners">
+    <lw-summoner-details data-summoner="summoner" data-summoner-game="summonerGame" data-server="server"></lw-summoner-details>
+</div>
+
+<!-- INCLUDE SHOULD BE DETAILED SUMMONER SECTION  -->
+<div ng-if="detailedSummoner" ng-include="'scripts/partials/summonerDetailed.html'"></div>
