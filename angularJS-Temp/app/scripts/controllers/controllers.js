@@ -41,13 +41,28 @@
     //$routeChangeError
     //LocationService
 
+    //Controller for the entire application, deals with user searching for summoners not in a game
+    app.controller("applicationController", function ($scope, $location){
+        $scope.$on("$routeChangeError", function (angularEvent, current, previous, rejection) {
+            console.log(angularEvent);
+            console.log(current);
+            console.log(previous);
+            console.log(rejection);
+            $scope.error = "Error";
+            $location.url("/");
+
+            //If issue resides in summonerGame service then redirect to search page with error message saying user isn't in a game.
+            //If issue resides in detailedSummoner then display game data without further information displayed in the center (may require an update to ng-if in gameOverview.html).
+        });
+    })
+
     //Controller for searching a summoner's current game
-    app.controller("summonerSearchController", function ($scope){
+    app.controller("summonerSearchController", function ($scope, $location){
         //Defaults server search to euw
         $scope.server = 'euw';
 
         $scope.submitSummonerSearch = function () {
-            window.location.href = "#/" + $scope.server + "/" + $scope.search;
+            $location.url("/" + $scope.server + "/" + $scope.search);
         };
     });
 
@@ -66,3 +81,27 @@
         $scope.detailedSummoner = detailedSummoner;
     });
 })();
+
+// OLD API CALL
+// SummonerDetails.getSummoner($scope.search, $scope.server)
+//     .then(function(summoner){
+//         $scope.summoner = summoner;
+//     }, function(err){
+//         console.log('nkm:', err.httpStatus);
+//         switch (err.httpStatus) {
+//             case 404:
+//                 $scope.errorMessage = 'Summoner' + $scope.search + 'does not exist on specified server';
+//                 break;
+//             case 408:
+//                 $scope.errorMessage = 'Summoner search has timed out, please try again or contact support at XXXXX';
+//                 break;
+//             case 503:
+//                 $scope.errorMessage = 'Riot API server currently unavailable';
+//                 break;
+//             default:
+//                 $scope.errorMessage = 'Unknown issue has arised with summoner search';
+//         }
+//     })
+//     .finally(function() {
+//         $scope.loadingMessage = false;
+//     });
