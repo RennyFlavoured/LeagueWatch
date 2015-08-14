@@ -27,6 +27,15 @@
                 }
             }
         })
+        .when('/testing', {
+            controller: 'applicationController',
+            templateUrl: 'scripts/partials/summonerSearch.html',
+            resolve: {
+                test: function (GameDetails){
+                    return GameDetails.testing();
+                }
+            }
+        })
         // Search page (www.leaguewatch.com)
         .otherwise({
             redirectTo: '/',
@@ -42,19 +51,16 @@
     //LocationService
 
     //Controller for the entire application, deals with user searching for summoners not in a game
-    app.controller("applicationController", function ($scope, $location){
+    app.controller("applicationController", function ($scope, $location, GameDetails){
         $scope.$on("$routeChangeError", function (angularEvent, current, previous, rejection) {
-            console.log(angularEvent);
-            console.log(current);
-            console.log(previous);
-            console.log(rejection);
-            $scope.error = "Error";
+            if (rejection.httpStatus === 400) {
+                $scope.errorMessage = 'Summoner is not currently in a game';
+            } else if (rejection.httpStatus === 500) {
+                $scope.errorMessage = 'Unable to contact Riots API service, please try again later';
+            };
             $location.url("/");
-
-            //If issue resides in summonerGame service then redirect to search page with error message saying user isn't in a game.
-            //If issue resides in detailedSummoner then display game data without further information displayed in the center (may require an update to ng-if in gameOverview.html).
         });
-    })
+    });
 
     //Controller for searching a summoner's current game
     app.controller("summonerSearchController", function ($scope, $location){
