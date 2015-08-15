@@ -3,13 +3,6 @@
 class SummonerController extends Zend_Controller_Action
 {
 
-    const CHALLENGER = 1;
-    const DIAMOND = 1;
-    const PLATINUM = 1;
-    const GOLD = 1;
-    const SILVER = 1;
-    const BRONZE = 1;
-
     public function init()
     {
     }
@@ -25,11 +18,12 @@ class SummonerController extends Zend_Controller_Action
 
     public function gameData($name)
     {
-        $summoner = $this->getSummoner($name);
 
-        $currentGame = $this->getCurrentGame($summoner['summoner_id']);
-        $league = $this->getLeague($summoner['summoner_id']);
-        $recent = $this->getRecentStats($summoner['summoner_id'], $currentGame['championId']);
+        $summoner       = $this->getSummoner($name);
+        $currentGame    = $this->getCurrentGame($summoner['summoner_id']);
+        $league         = $this->getLeague($summoner['summoner_id']);
+        $recent         = $this->getRecentStats($summoner['summoner_id'], $currentGame['championId']);
+
         $data = array (
             "summonerName" => $summoner['name'],
             "championName" => $currentGame['championName'],
@@ -39,13 +33,8 @@ class SummonerController extends Zend_Controller_Action
             "form" => $recent['won'],
             "team" => ($currentGame['team'] == '200' ? 'purple' : 'blue')
         );
-        //$runes = $this->getRunes($summoner['summoner_id']);
-        //$masteries = $this->getMasteries($summoner['summoner_id']);
-
-
 
         return $data;
-
     }
 
 
@@ -95,41 +84,35 @@ class SummonerController extends Zend_Controller_Action
     
     public function getRunes($id)
     {
-        $apiKey = Model_Config::getGlobals('api_key');
-        $modRunePages = new Model_RunePages();
-        $modRunes = new Model_Runes();
+        $apiKey         = Model_Config::getGlobals('api_key');
+        $modRunePages   = new Model_RunePages();
 
-        $staticRunes = file_get_contents(PROJECT_PATH .'/library/assets/runes.json');
-        $staticRunes = json_decode($staticRunes, true);
+//        $staticRunes = file_get_contents(PROJECT_PATH .'/library/assets/runes.json');
+//        $staticRunes = json_decode($staticRunes, true);
 
         $currRunePages = $modRunePages->getRunePages($id);
         if (!empty($currRunePages)) {
             return $currRunePages;
         }
 
-        $curl = new API_Curl();
-        $runes = $curl->sendRequest('summoner/' . $id . '/runes', $apiKey);
+        $curl   = new API_Curl();
+        $runes  = $curl->sendRequest('summoner/' . $id . '/runes', $apiKey);
 
         $runes = json_decode($runes, true);
 
         foreach($runes[$id]['pages'] as $runepages){
 
-
-
             $runepage = array(
-                'summoner_id' => $id,
-                'date_updated' => time(),
-                'current' => $runepages['current'],
-                'runeset' => json_encode($runepages['slots']),
-                'page_id' => $runepages['id'],
-                'page_name' => $runepages['name']
+                'summoner_id'   => $id,
+                'date_updated'  => time(),
+                'current'       => $runepages['current'],
+                'runeset'       => json_encode($runepages['slots']),
+                'page_id'       => $runepages['id'],
+                'page_name'     => $runepages['name']
             );
 
             $modRunePages->createRunePage($runepage);
-
         }
-
-
     }
 
 
@@ -143,9 +126,6 @@ class SummonerController extends Zend_Controller_Action
         $masteries = json_decode($masteries, true);
 
         Model_Log::trace($masteries);
-
-
-
     }
 
     public function getCurrentGame($id)
@@ -161,6 +141,11 @@ class SummonerController extends Zend_Controller_Action
 
         $currentGame = json_decode($currentGame, true);
 
+        if (empty($currentGame)){
+            $recent = array( 'champPrev' => 'N/A' );
+            return $recent;
+        }
+
         foreach ($currentGame['participants'] as $participant){
 
             if ($participant['summonerId'] == $id) {
@@ -175,10 +160,10 @@ class SummonerController extends Zend_Controller_Action
                 $masteries = $this->masteryCheck($participant['masteries']);
 
                 $data =  array(
-                    'championId' => $participant['championId'],
-                    'championName' => $champion,
-                    'team' => $participant['teamId'],
-                    'masteries' => $masteries
+                    'championId'    => $participant['championId'],
+                    'championName'  => $champion,
+                    'team'          => $participant['teamId'],
+                    'masteries'     => $masteries
                 );
 
                 return $data;
@@ -217,6 +202,7 @@ class SummonerController extends Zend_Controller_Action
             'champPrev' => 0,
             'won' => 0
         );
+
         foreach ($data['games'] as $matches) {
             if ($matches['championId'] == $champ){
                 $stats['champPrev']++;
@@ -259,8 +245,6 @@ class SummonerController extends Zend_Controller_Action
             'tier' => '',
             'division' => '',
         );
-
-
 
         foreach ($tiers as $tier){
             switch ($tier['tier']) {
