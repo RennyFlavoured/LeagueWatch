@@ -1,0 +1,15 @@
+<a style="color: black" href="#/{{server}}/{{summonerGame}}/{{summoner.summonerName}}">
+    <div id="summonerDetails">
+        <div id="summonerDetailsHover"></div>
+        <div id="summonerText" style="padding: 30px; height: 100px;">
+            <p>{{summoner.summonerName}}</p>
+            <p>{{summoner.championName}} ({{summoner.championPlayed}})</p>
+            <p>{{summoner.rank}}</p>
+            <br/>
+            <p>{{summoner.masteries}}</p>
+            <p ng-if="summoner.form === 'good'">Summoner on form</p>
+            <p ng-if="summoner.form === 'bad'">Summoner on tilt</p>
+        </div>
+        <div id="summonerStreak"></div>
+    </div>
+</a>
