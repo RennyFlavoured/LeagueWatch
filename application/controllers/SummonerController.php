@@ -142,8 +142,7 @@ class SummonerController extends Zend_Controller_Action
         $currentGame = json_decode($currentGame, true);
 
         if (empty($currentGame)){
-            $recent = array( 'champPrev' => 'N/A' );
-            return $recent;
+            throw new Zend_Controller_Action_Exception('No game found', 404);
         }
 
         foreach ($currentGame['participants'] as $participant){
