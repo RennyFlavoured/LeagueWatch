@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS `runepages` (
   `summoner_id` int(20) DEFAULT NULL,
   `date_updated` int(20) DEFAULT NULL,
   `current` varchar(255) DEFAULT NULL,
+  `runeset` text DEFAULT NULL,
   `page_id` int(20) DEFAULT NULL,
-  `page_name` int(20) DEFAULT NULL,
+  `page_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`entry_id`)
 ) ENGINE=myisam  DEFAULT CHARSET=latin1 ;
