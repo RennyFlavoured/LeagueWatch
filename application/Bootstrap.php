@@ -14,6 +14,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         date_default_timezone_set('UTC');
     }
 
+    public function _initDbRegistry()
+    {
+        $this->bootstrap('db');
+    }
+
     protected function _initAutoload()
     {
         // Establish internal resources and push autoloader to top of stack (new Autoloader = first)
