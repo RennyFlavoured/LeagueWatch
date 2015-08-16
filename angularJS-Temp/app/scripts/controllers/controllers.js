@@ -9,11 +9,11 @@
             controller: 'DetailedController',
             templateUrl: 'scripts/partials/gameOverview.html',
             resolve: {
-                game: function ($routeParams, GameDetails){
-                    return GameDetails.getGameOverview($routeParams.server, $routeParams.summonerGame);
+                game: function ($route, GameDetails){
+                    return GameDetails.getGameOverview($route.current.params.server, $route.current.params.summonerGame);
                 },
-                detailedSummoner: function ($routeParams, GameDetails){
-                    return GameDetails.getDetailedSummoner($routeParams.server, $routeParams.detailedSummoner);
+                detailedSummoner: function ($route, GameDetails){
+                    return GameDetails.getDetailedSummoner($route.current.params.server, $route.current.params.detailedSummoner);
                 }
             }
         })
@@ -22,8 +22,8 @@
             controller: 'gameOverviewController',
             templateUrl: 'scripts/partials/gameOverview.html',
             resolve: {
-                game: function ($routeParams, GameDetails){
-                    return GameDetails.getGameOverview($routeParams.server, $routeParams.summonerGame);
+                game: function ($route, GameDetails){
+                    return GameDetails.getGameOverview($route.current.params.server, $route.current.params.summonerGame);
                 }
             }
         })
