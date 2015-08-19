@@ -28,6 +28,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'namespace' => 'API_',
                 'path'      => 'api',
             ),
+            'service'    => array(
+                'namespace' => 'Service_',
+                'path'      => 'service',
+            ),
             'form'    => array(
                 'namespace' => 'Form_',
                 'path'      => 'forms',

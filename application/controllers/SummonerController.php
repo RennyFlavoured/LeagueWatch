@@ -3,14 +3,28 @@
 class SummonerController extends Zend_Controller_Action
 {
 
+    protected $staticChampions = array();
+
     public function init()
     {
+        $staticChampions = file_get_contents(PROJECT_PATH .'/library/assets/champions.json');
+        $staticChampions = json_decode($staticChampions, true);
+
+        foreach($staticChampions['data'] as $champ){
+            $this->staticChampions[$champ['key']] = $champ;
+        }
     }
 
     public function indexAction()
     {
-        $name = $this->_getParam('name');
+//        $serviceRunes = new Service_Runes();
+//        $reposne = $serviceRunes->getResponse();
+//
+        $this->getResponse()
+             ->setHeader('content-type', 'application/json')
+             ->setHeader('Access-Control-Allow-Origin', '*');
 
+        $name = $this->_getParam('name');
         $data = $this->gameData($name);
 
         return $this->_helper->json($data);
@@ -18,38 +32,39 @@ class SummonerController extends Zend_Controller_Action
 
     public function gameData($name)
     {
-
         $summoner       = $this->getSummoner($name);
         $currentGame    = $this->getCurrentGame($summoner['summoner_id']);
-        $league         = $this->getLeague($summoner['summoner_id']);
-        $recent         = $this->getRecentStats($summoner['summoner_id'], $currentGame['championId']);
+        $league         = $this->getLeagues($currentGame);
+//        $recent         = $this->getRecentStats($summoner['summoner_id'], $currentGame['championId']);
+//
+//        $data = array (
+//            "summonerName" => $summoner['name'],
+//            "championName" => $currentGame['championName'],
+//            "championPlayed" => $recent['champPrev'],
+//            "rank" => $league['tier'] . $league['division'],
+//            "masteries" => $currentGame['masteries'],
+//            "form" => $recent['won'],
+//            "team" => ($currentGame['team'] == '200' ? 'purple' : 'blue')
+//        );
 
-        $data = array (
-            "summonerName" => $summoner['name'],
-            "championName" => $currentGame['championName'],
-            "championPlayed" => $recent['champPrev'],
-            "rank" => $league['tier'] . $league['division'],
-            "masteries" => $currentGame['masteries'],
-            "form" => $recent['won'],
-            "team" => ($currentGame['team'] == '200' ? 'purple' : 'blue')
-        );
+        $data = array();
 
+        foreach($league as $key => $recent){
+
+            $recent['championPlayed'] = rand(0,10);
+            $recent['form'] = 'bad';
+            $recent['summonerId'] = $key;
+
+            if($recent['team'] == 'Blue'){
+                $data['summoners']['blue'][] = $recent;
+            } elseif($recent['team'] == 'Purple'){
+                $data['summoners']['red'][] = $recent;
+            }
+        }
+        $data['bans'] = $currentGame['bans'];
         return $data;
     }
 
-
-    public function populateAction($name)
-    {
-        $summoner = $this->getSummoner($name);
-        $runes = $this->getRunes($summoner['summoner_id']);
-        //$masteries = $this->getMasteries($summoner['summoner_id']);
-        //$league = $this->getLeague($summoner['summoner_id']);
-
-        $data = 'success';
-
-        return $data;
-
-    }
     public function getSummoner($name)
     {
         $apiKey = Model_Config::getGlobals('api_key');
@@ -115,7 +130,6 @@ class SummonerController extends Zend_Controller_Action
         }
     }
 
-
     public function getMasteries($id)
     {
         $apiKey = Model_Config::getGlobals('api_key');
@@ -132,59 +146,60 @@ class SummonerController extends Zend_Controller_Action
     {
         $apiKey = Model_Config::getGlobals('api_key');
 
-        $staticChampions = file_get_contents(PROJECT_PATH .'/library/assets/champions.json');
-        $staticChampions = json_decode($staticChampions, true);
-
-
         $curl = new API_Curl();
         $currentGame = $curl->sendCustom('observer-mode/rest/consumer/getSpectatorGameInfo/EUW1/' . $id, $apiKey);
 
         $currentGame = json_decode($currentGame, true);
 
         if (empty($currentGame)){
-            throw new Zend_Controller_Action_Exception('No game found', 404);
+            $this->getResponse()->setStatusCode(404);
+            return;
         }
 
+        $data = array();
+        $bannedChamps = $this->getBanned($currentGame);
+
+
+
+        $data['bans'] = $bannedChamps;
         foreach ($currentGame['participants'] as $participant){
 
-            if ($participant['summonerId'] == $id) {
+            $currChamp = $this->staticChampions[$participant['championId']];
 
-                foreach($staticChampions['data'] as $champ) {
-                    if($participant['championId'] == $champ['key']){
-                        $champion = $champ['name'];
-                        break;
-                    }
-                }
+            $masteries = $this->masteryCheck($participant['masteries']);
+            $teamId = $this->getTeam($participant['teamId']);
 
-                $masteries = $this->masteryCheck($participant['masteries']);
-
-                $data =  array(
-                    'championId'    => $participant['championId'],
-                    'championName'  => $champion,
-                    'team'          => $participant['teamId'],
-                    'masteries'     => $masteries
-                );
-
-                return $data;
-            }
-            continue;
+            $data[$participant['summonerId']] =  array(
+                'summonerName'  => $participant['summonerName'],
+                'championId'    => $participant['championId'],
+                'championName'  => $currChamp['name'],
+                'team'          => $teamId,
+                'masteries'     => $masteries
+            );
         }
 
-        return null;
+        return $data;
+
     }
 
-    public function getLeague($id)
+    public function getLeagues($ids)
     {
         $apiKey = Model_Config::getGlobals('api_key');
-
         $curl = new API_Curl();
-        $league = $curl->sendCustom('/api/lol/euw/v2.5/league/by-summoner/' . $id . '/entry', $apiKey);
 
-        $league = json_decode($league, true);
+        unset($ids['bans']);
+        $champIds = implode(',', array_keys($ids));
+        $leagueResult = $curl->sendCustom('/api/lol/euw/v2.5/league/by-summoner/' . $champIds . '/entry', $apiKey);
 
-        $league = $this->teirCheck($league[$id]);
+        $leagues = json_decode($leagueResult, true);
 
-        return $league;
+        foreach($leagues as $key =>$league) {
+            $currLeague = $this->teirCheck($league);
+
+            $ids[$key]['league'] = $currLeague;
+        }
+
+        return $ids;
 
     }
 
@@ -212,7 +227,34 @@ class SummonerController extends Zend_Controller_Action
         }
 
         return $stats;
+    }
 
+    /////////////////////////////////////////////////////
+                    // Aux Functions //
+    ////////////////////////////////////////////////////
+
+    public function getBanned($currentGame)
+    {
+        $bannedChamps = array();
+
+        foreach($currentGame['bannedChampions'] as $bannedChamp){
+            $currChamp = $this->staticChampions[$bannedChamp['championId']];
+
+            $bannedChamps[] = $currChamp['name'];
+        }
+
+        return $bannedChamps;
+    }
+
+    public function getTeam($team)
+    {
+        if($team == '100') {
+            return 'Blue';
+        } elseif($team == '200') {
+            return 'Purple';
+        }
+
+        return null;
     }
 
     public function masteryCheck($masteries)
@@ -292,7 +334,6 @@ class SummonerController extends Zend_Controller_Action
             }
         }
 
-
-        return $highest;
+        return $highest['tier'] . $highest['division'];
     }
 }

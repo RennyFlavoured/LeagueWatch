@@ -16,6 +16,7 @@ class API_Curl
         curl_close($curl);
         return $resp;
     }
+
     public  function sendDDRequest($url, $data, $param)
     {
         $apiKey = Model_Config::getGlobals('api_key');
@@ -32,6 +33,7 @@ class API_Curl
         curl_close($curl);
         return $resp;
     }
+
     public  function sendCustom($url, $apiKey)
     {
         $curl = curl_init();
