@@ -15,6 +15,15 @@
     background-image: url('../img/championHighlight.png');
 }
 
+#red #summonerDetails {
+    /*-moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";*/
+}
+
 #summonerText p {
     text-align: right;
     margin: 0;

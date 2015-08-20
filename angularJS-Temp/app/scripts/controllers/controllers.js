@@ -53,11 +53,12 @@
     //Controller for the entire application, deals with user searching for summoners not in a game
     app.controller("applicationController", function ($scope, $location, GameDetails){
         $scope.$on("$routeChangeError", function (angularEvent, current, previous, rejection) {
-            if (rejection.httpStatus === 400) {
+            if (rejection.httpStatus === 400 || rejection.httpStatus === 404) {
                 $scope.errorMessage = 'Summoner is not currently in a game';
             } else if (rejection.httpStatus === 500) {
                 $scope.errorMessage = 'Unable to contact Riots API service, please try again later';
             };
+            console.log('Error Code: ', rejection.httpStatus);
             $location.url("/");
         });
     });
@@ -76,14 +77,16 @@
         //$routeParams required for URL creation within partial
         $scope.summonerGame = $routeParams.summonerGame;
         $scope.server = $routeParams.server;
-        $scope.summoners = game.summoners;
+        $scope.summoners = game[0].summoners;
+        $scope.bans = game[0].bans;
     });
 
     app.controller("DetailedController", function ($scope, $routeParams, game, detailedSummoner){
         //$routeParams required for URL creation within partial
         $scope.summonerGame = $routeParams.summonerGame;
         $scope.server = $routeParams.server;
-        $scope.summoners = game.summoners;
+        $scope.summoners = game[0].summoners;
+        $scope.bans = game[0].bans;
         $scope.detailedSummoner = detailedSummoner;
     });
 })();

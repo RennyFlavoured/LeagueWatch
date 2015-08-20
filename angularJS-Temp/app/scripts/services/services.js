@@ -8,67 +8,12 @@ services.factory('GameDetails', function ($http, $q){
 
         return $http.get(url)
             .then(function (response){
-				console.log(reponse);
-                for (var key in response.data) {
-                    if (response.data.hasOwnProperty(key)) {
-                        return response.data[key];
-                    }
-                };
+                return [response.data];
             }, function (response){
                 var err = new Error('bad status code');
                 err.httpStatus = response.status;
                 throw err;
             });
-			
-		// return $q.resolve({
-            // "summoners": [
-                // {
-                    // "summonerName":"Tactick",
-                    // "championName":"Ahri",
-                    // "championPlayed":10,
-                    // "rank":"Platinum",
-                    // "masteries":"21/9/0",
-                    // "form":"bad",
-                    // "team":"blue"
-                // },
-                // {
-                    // "summonerName":"Helgrimm",
-                    // "championName":"Vayne",
-                    // "championPlayed":8,
-                    // "rank":"Silver",
-                    // "masteries":"21/9/0",
-                    // "form":"good",
-                    // "team":"blue"
-                // },
-                // {
-                    // "summonerName":"Nerdy4tw",
-                    // "championName":"Thresh",
-                    // "championPlayed":6,
-                    // "rank":"Gold",
-                    // "masteries":"21/9/0",
-                    // "form":"average",
-                    // "team":"blue"
-                // },
-                // {
-                    // "summonerName":"ShadowedSun",
-                    // "championName":"Quinn",
-                    // "championPlayed":2,
-                    // "rank":"Silver",
-                    // "masteries":"21/0/9",
-                    // "form":"average",
-                    // "team":"blue"
-                // },
-                // {
-                    // "summonerName":"Aklith",
-                    // "championName":"Amumu",
-                    // "championPlayed":1,
-                    // "rank":"Silver",
-                    // "masteries":"0/21/9",
-                    // "form":"average",
-                    // "team":"blue"
-                // }
-            // ]
-        // });
     };
 
     game.getDetailedSummoner = function (server, summonerName){
@@ -87,6 +32,6 @@ services.factory('GameDetails', function ($http, $q){
             "KDA": 9.3
         });
     };
-	
+
     return game;
 });

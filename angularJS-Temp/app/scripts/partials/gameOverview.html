@@ -1,6 +1,24 @@
-<div ng-repeat="summoner in summoners">
-    <lw-summoner-details data-summoner="summoner" data-summoner-game="summonerGame" data-server="server"></lw-summoner-details>
+<div id="blueTeam" style="float: left;">
+    <div ng-repeat="summoner in summoners.blue">
+        <lw-summoner-details data-summoner="summoner" data-summoner-game="summonerGame" data-server="server" id="blue"></lw-summoner-details>
+    </div>
+
+    <div ng-repeat="bans in bans.blue">
+        <!-- INSERT DIRECTIVE FOR DISPLAYING BANS -->
+    </div>
 </div>
 
-<!-- INCLUDE SHOULD BE DETAILED SUMMONER SECTION  -->
-<div ng-if="detailedSummoner" ng-include="'scripts/partials/summonerDetailed.html'"></div>
+<div id="detailedSection" style="float: left;">
+    <!-- INCLUDE SHOULD BE DETAILED SUMMONER SECTION  -->
+    <div ng-if="detailedSummoner" ng-include="'scripts/partials/summonerDetailed.html'"></div>
+</div>
+
+<div id="redTeam" style="float: left;">
+    <div ng-repeat="summoner in summoners.red">
+        <lw-summoner-details data-summoner="summoner" data-summoner-game="summonerGame" data-server="server" id="red"></lw-summoner-details>
+    </div>
+
+    <div ng-repeat="bans in bans.red">
+        <!-- INSERT DIRECTIVE FOR DISPLAYING BANS -->
+    </div>
+</div>
