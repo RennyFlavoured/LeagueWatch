@@ -32,6 +32,7 @@ class SummonerController extends Zend_Controller_Action
 
     public function gameData($name)
     {
+
         $summoner       = $this->getSummoner($name);
         $currentGame    = $this->getCurrentGame($summoner['summoner_id']);
         $league         = $this->getLeagues($currentGame);
@@ -61,7 +62,9 @@ class SummonerController extends Zend_Controller_Action
                 $data['summoners']['red'][] = $recent;
             }
         }
-        $data['bans'] = $currentGame['bans'];
+        $data['summoners']['blue']['bans'] = $currentGame['bans']['Blue'];
+        $data['summoners']['red']['bans'] = $currentGame['bans']['Purple'];
+
         return $data;
     }
 
@@ -70,13 +73,16 @@ class SummonerController extends Zend_Controller_Action
         $apiKey = Model_Config::getGlobals('api_key');
         $summoner_db = new Model_Summoners();
 
+        $rawName = rawurlencode($name);
+
         $summoner = $summoner_db->getSummonerByName($name);
+
         if (!empty($summoner)){
             return $summoner;
         }
 
         $curl = new API_Curl();
-        $summoner_id = $curl->sendRequest('summoner/by-name/' . $name, $apiKey);
+        $summoner_id = $curl->sendRequest('summoner/by-name/' . $rawName, $apiKey);
 
         $summoner_id = json_decode($summoner_id, true);
 
@@ -152,19 +158,23 @@ class SummonerController extends Zend_Controller_Action
         $currentGame = json_decode($currentGame, true);
 
         if (empty($currentGame)){
-            $this->getResponse()->setStatusCode(404);
-            return;
+            throw new Zend_Controller_Action_Exception('This game does not exist', 404);
         }
 
         $data = array();
         $bannedChamps = $this->getBanned($currentGame);
 
-
-
         $data['bans'] = $bannedChamps;
-        foreach ($currentGame['participants'] as $participant){
 
-            $currChamp = $this->staticChampions[$participant['championId']];
+        foreach ($currentGame['participants'] as $participant){
+            if ($participant['championId'] = 223){
+
+                $currChamp = array();
+                $currChamp['name'] = 'Tahm Kench';
+
+            } else {
+                $currChamp = $this->staticChampions[$participant['championId']];
+            }
 
             $masteries = $this->masteryCheck($participant['masteries']);
             $teamId = $this->getTeam($participant['teamId']);
@@ -240,7 +250,8 @@ class SummonerController extends Zend_Controller_Action
         foreach($currentGame['bannedChampions'] as $bannedChamp){
             $currChamp = $this->staticChampions[$bannedChamp['championId']];
 
-            $bannedChamps[] = $currChamp['name'];
+            $teamBanned = $this->getTeam($bannedChamp['teamId']);
+            $bannedChamps[$teamBanned][] = $currChamp['name'];
         }
 
         return $bannedChamps;
