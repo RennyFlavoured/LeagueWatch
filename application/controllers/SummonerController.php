@@ -62,8 +62,11 @@ class SummonerController extends Zend_Controller_Action
                 $data['summoners']['red'][] = $recent;
             }
         }
-        $data['summoners']['blue']['bans'] = $currentGame['bans']['Blue'];
-        $data['summoners']['red']['bans'] = $currentGame['bans']['Purple'];
+        
+        if (isset($currentGame['bans']['Blue'])) {
+            $data['summoners']['blue']['bans'] = $currentGame['bans']['Blue'];
+            $data['summoners']['red']['bans'] = $currentGame['bans']['Purple'];
+        }
 
         return $data;
     }
@@ -167,7 +170,7 @@ class SummonerController extends Zend_Controller_Action
         $data['bans'] = $bannedChamps;
 
         foreach ($currentGame['participants'] as $participant){
-            if ($participant['championId'] = 223){
+            if ($participant['championId'] == 223){
 
                 $currChamp = array();
                 $currChamp['name'] = 'Tahm Kench';
