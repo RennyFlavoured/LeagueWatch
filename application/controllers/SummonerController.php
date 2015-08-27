@@ -62,10 +62,10 @@ class SummonerController extends Zend_Controller_Action
                 $data['summoners']['red'][] = $recent;
             }
         }
-        
+
         if (isset($currentGame['bans']['Blue'])) {
-            $data['summoners']['blue']['bans'] = $currentGame['bans']['Blue'];
-            $data['summoners']['red']['bans'] = $currentGame['bans']['Purple'];
+            $data['bans']['blue'] = $currentGame['bans']['Blue'];
+            $data['bans']['red'] = $currentGame['bans']['Purple'];
         }
 
         return $data;
